@@ -1,6 +1,7 @@
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PushbackReader;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scanner {
@@ -8,29 +9,31 @@ public class Scanner {
     enum TOKEN {SCANEOF,ID,INTCONST,DECLARE,PRINT,INTIALIZE,EQUALS,NOTEQUALS,
         IF,THEN,ENDIF,LOOP,DO,ENDLOOP,CALC,PLUS}
 
-    static PushbackReader pbr;
-    static StringBuffer buffer = new StringBuffer();
-    static List<String> reservedWord = List.of(
-            "declare", "print", "initialize", "if", "then", "endif", "loop", "do", "endloop", "calc");
+    private PushbackReader pbr;
+    private List<String> reservedWord;
+    private StringBuilder buffer;
 
-    static{
+    // Constructor
+    public Scanner(PushbackReader pbr) {
+        this.pbr = pbr;
+        this.buffer = new StringBuilder();
 
-         FileReader fr;
-
-         try{
-             fr = new FileReader("input.txt");
-             pbr = new PushbackReader(fr);
-
-         } catch (Exception e) {
-             throw new RuntimeException(e);
-         }
-         PushbackReader pbr = new PushbackReader(fr);
-
+        reservedWord = new ArrayList<>();
+        reservedWord.add("declare");
+        reservedWord.add("print");
+        reservedWord.add("initialize");
+        reservedWord.add("if");
+        reservedWord.add("then");
+        reservedWord.add("endif");
+        reservedWord.add("loop");
+        reservedWord.add("do");
+        reservedWord.add("endloop");
+        reservedWord.add("calc");
     }
 
 
 
-    public static TOKEN Scan() throws IOException {
+    public  TOKEN scan() throws IOException {
 
         try{
             buffer.setLength(0);

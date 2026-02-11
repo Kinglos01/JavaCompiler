@@ -5,10 +5,10 @@ import java.io.PushbackReader;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-      //  PushbackReader pbr = new PushbackReader(new FileReader("input.txt"));
-        Scanner scannerTest = new Scanner();
+        PushbackReader pbr = new PushbackReader(new FileReader("input.txt"));
+        Scanner scannerTest = new Scanner(pbr);
 
-        scannerTest.Scan();
+        scannerTest.scan();
 
     }
 }
