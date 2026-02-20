@@ -87,16 +87,21 @@ public class Scanner {
                 }
 
                 if(c == '+'){
+                    buffer.append((char)c);
                     return TOKEN.PLUS;
                 }
 
                 if(c == '='){
+                    buffer.append((char)c);
                     return TOKEN.EQUALS;
                 }
 
                 if(c == '!'){
+                    buffer.append((char)c);
                     c = pbr.read();
                     if(c == '='){
+                        buffer.append((char)c);
+                        c = pbr.read();
                         return TOKEN.NOTEQUALS;
                     }
                     else{

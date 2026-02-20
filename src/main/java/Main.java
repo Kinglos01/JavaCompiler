@@ -6,7 +6,7 @@ import java.io.StringReader;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        String input = "declare score123";
+        String input = "declare x != 27";
 
         PushbackReader pbr = new PushbackReader(new StringReader(input));
         Scanner scannerTest = new Scanner(pbr);

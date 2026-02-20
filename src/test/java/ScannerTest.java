@@ -46,7 +46,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.EQUALS, tokenEquals);
-        System.out.println(tokenEquals);
+        System.out.println(tokenEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN intConst = scannerTest.scan();
         assertEquals(Scanner.TOKEN.INTCONST, intConst);
@@ -74,7 +74,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.EQUALS, tokenEquals);
-        System.out.println(tokenEquals);
+        System.out.println(tokenEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenID2 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenID2);
@@ -82,7 +82,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenPlus = scannerTest.scan();
         assertEquals(Scanner.TOKEN.PLUS, tokenPlus);
-        System.out.println(tokenPlus);
+        System.out.println(tokenPlus + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenID3 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenID3);
@@ -131,7 +131,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.EQUALS, tokenEquals);
-        System.out.println(tokenEquals);
+        System.out.println(tokenEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenID2 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenID2);
@@ -168,7 +168,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.EQUALS, tokenEquals);
-        System.out.println(tokenEquals);
+        System.out.println(tokenEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenID2 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenID2);
@@ -213,7 +213,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenNotEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.NOTEQUALS, tokenNotEquals);
-        System.out.println(tokenNotEquals);
+        System.out.println(tokenNotEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenId2 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenId2);
@@ -233,7 +233,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenEquals = scannerTest.scan();
         assertEquals(Scanner.TOKEN.EQUALS, tokenEquals);
-        System.out.println(tokenEquals);
+        System.out.println(tokenEquals + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenId4 = scannerTest.scan();
         assertEquals(Scanner.TOKEN.ID, tokenId4);
@@ -241,7 +241,7 @@ class ScannerTest {
 
         Scanner.TOKEN tokenPlus = scannerTest.scan();
         assertEquals(Scanner.TOKEN.PLUS, tokenPlus);
-        System.out.println(tokenPlus);
+        System.out.println(tokenPlus + " -> " + scannerTest.getTokenBufferString());
 
         Scanner.TOKEN tokenInt = scannerTest.scan();
         assertEquals(Scanner.TOKEN.INTCONST, tokenInt);
