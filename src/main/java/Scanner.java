@@ -101,7 +101,7 @@ public class Scanner {
                     c = pbr.read();
                     if(c == '='){
                         buffer.append((char)c);
-                        c = pbr.read();
+                        pbr.read();
                         return TOKEN.NOTEQUALS;
                     }
                     else{
