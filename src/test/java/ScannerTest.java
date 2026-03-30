@@ -268,4 +268,44 @@ class ScannerTest {
         assertEquals(Scanner.TOKEN.SCANEOF, tokenEOF);
         System.out.println(tokenEOF);
     }
+
+    @Test
+    public void testCorrectProgram() {
+        Parser parser = new Parser();
+
+        String program =
+                "declare a\n" +
+                        "declare b\n" +
+                        "initialize a = 1\n" +
+                        "initialize b = 5\n" +
+                        "loop a != b do\n" +
+                        "calc a = a + 1\n" +
+                        "print a\n" +
+                        "if a = b then\n" +
+                        "print a\n" +
+                        "endif\n" +
+                        "endloop";
+
+        assertTrue(parser.parse(program));
+    }
+
+    @Test
+    public void testIncorrectProgram() {
+        Parser parser = new Parser();
+
+        String program =
+                "declare a\n" +
+                        "declare b\n" +
+                        "initialize a = 5\n" +
+                        "initialize b = 10\n" +
+                        "print a\n" +
+                        "print b\n" +
+                        "if a b then\n" +  // missing equals between a and b
+                        "print a\n" +
+                        "endif";
+
+        assertFalse(parser.parse(program));
+    }
+
+
 }
