@@ -6,6 +6,13 @@ import java.util.Map;
 public class Parser {
     enum TYPE {INTDATATYPE}
 
+ AbstractSyntaxTree ast = new AbstractSyntaxTree();
+
+    public AbstractSyntaxTree getAst() {
+        return ast;
+    }
+
+
     public class SymbolTableItem {
         String name;
         TYPE type;
@@ -44,7 +51,7 @@ public class Parser {
             scanner = new Scanner(pbr);
             nextToken = scanner.scan();
 
-            parseProgram();
+            ast.setNodeProgram(parseProgram());
 
             matches(Scanner.TOKEN.SCANEOF);
 
@@ -58,20 +65,24 @@ public class Parser {
     }
 
 
-    private void parseProgram() throws Exception {
-        parseDeclarations();
-        parseStatements();
+    private AbstractSyntaxTree.NodeProgram parseProgram() throws Exception {
+        AbstractSyntaxTree.NodeDecls decls = parseDeclarations();
+        AbstractSyntaxTree.NodeStmts stmts = parseStatements();
+        AbstractSyntaxTree.NodeProgram program = ast.new NodeProgram(decls, stmts);
+        return program;
     }
 
 
-    private void parseDeclarations() throws Exception {
+    private AbstractSyntaxTree.NodeDecls parseDeclarations() throws Exception {
+        AbstractSyntaxTree.NodeDecls declsNode = ast.new NodeDecls();
         while (nextToken == Scanner.TOKEN.DECLARE) {
-            parseDeclare();
+            AbstractSyntaxTree.NodeId id = parseDeclare();
+            declsNode.decls.add(id);
         }
+        return declsNode;
     }
 
-
-    private void parseDeclare() throws Exception {
+    private AbstractSyntaxTree.NodeId parseDeclare() throws Exception {
         matches(Scanner.TOKEN.DECLARE);
 
         // Capture name BEFORE matching ID (matching will advance the scanner)
@@ -91,24 +102,29 @@ public class Parser {
         symbolTable.put(varName, item);
 
         System.out.println("Declared variable: " + varName);
+        AbstractSyntaxTree.NodeId idNode = ast.new NodeId(varName);
+        return idNode;
     }
 
 
-    private void parseStatements() throws Exception {
+    private AbstractSyntaxTree.NodeStmts parseStatements() throws Exception {
+        AbstractSyntaxTree.NodeStmts stmtsNode = ast.new NodeStmts();
         while (nextToken == Scanner.TOKEN.PRINT   || nextToken == Scanner.TOKEN.INITIALIZE || nextToken == Scanner.TOKEN.IF      ||
                 nextToken == Scanner.TOKEN.LOOP    || nextToken == Scanner.TOKEN.CALC) {
-            parseStatement();
+            AbstractSyntaxTree.NodeStmt stmt = parseStatement();
+            stmtsNode.stmts.add(stmt);
         }
+        return stmtsNode;
     }
 
 
-    private void parseStatement() throws Exception {
+    private AbstractSyntaxTree.NodeStmt parseStatement() throws Exception {
         switch (nextToken) {
-            case PRINT:      parsePrint();      break;
-            case INITIALIZE: parseInitialize(); break;
-            case IF:         parseIf();         break;
-            case LOOP:       parseLoop();       break;
-            case CALC:       parseCalc();       break;
+            case PRINT:      return  parsePrint();
+            case INITIALIZE: return parseInitialize();
+            case IF:         return  parseIf();
+            case LOOP:       return  parseLoop();
+            case CALC:       return parseCalc();
             default:
                 throw new Exception("Expected statement but got: " + nextToken
                         + " | Buffer: " + scanner.getTokenBufferString());
@@ -116,7 +132,7 @@ public class Parser {
     }
 
 
-    private void parseInitialize() throws Exception {
+    private AbstractSyntaxTree.NodeInitialize parseInitialize() throws Exception {
         matches(Scanner.TOKEN.INITIALIZE);
 
 
@@ -131,9 +147,14 @@ public class Parser {
         matches(Scanner.TOKEN.INTCONST);
 
         System.out.println("Initialize: " + varName + " = " + value);
+
+        AbstractSyntaxTree.NodeId idNode = ast.new NodeId(varName);
+        AbstractSyntaxTree.NodeIntConst intConstNode = ast.new NodeIntConst(Integer.parseInt(value));
+        AbstractSyntaxTree.NodeInitialize initNode = ast.new NodeInitialize(idNode, intConstNode);
+        return initNode;
     }
 
-    private void parsePrint() throws Exception {
+    private AbstractSyntaxTree.NodePrint parsePrint() throws Exception {
         matches(Scanner.TOKEN.PRINT);
 
         String varName = scanner.getTokenBufferString();
@@ -141,9 +162,12 @@ public class Parser {
         matches(Scanner.TOKEN.ID);
 
         System.out.println("Print: " + varName);
+        AbstractSyntaxTree.NodeId idNode = ast.new NodeId(varName);
+        AbstractSyntaxTree.NodePrint printNode = ast.new NodePrint(idNode);
+        return printNode;
     }
 
-    private void parseIf() throws Exception {
+    private AbstractSyntaxTree.NodeIf parseIf() throws Exception {
         matches(Scanner.TOKEN.IF);
 
         String leftId = scanner.getTokenBufferString();
@@ -156,12 +180,17 @@ public class Parser {
 
         matches(Scanner.TOKEN.THEN);
 
-        parseStatements();
+        AbstractSyntaxTree.NodeStmts stmtsNode = parseStatements();
 
         matches(Scanner.TOKEN.ENDIF);
+
+        AbstractSyntaxTree.NodeId leftNode = ast.new NodeId(leftId);
+        AbstractSyntaxTree.NodeId rightNode = ast.new NodeId(rightId);
+        AbstractSyntaxTree.NodeIf ifNode = ast.new NodeIf(leftNode, rightNode, stmtsNode);
+        return ifNode;
     }
 
-    private void parseLoop() throws Exception {
+    private AbstractSyntaxTree.NodeLoop parseLoop() throws Exception {
         matches(Scanner.TOKEN.LOOP);
 
         String leftId = scanner.getTokenBufferString();
@@ -174,12 +203,17 @@ public class Parser {
 
         matches(Scanner.TOKEN.DO);
 
-        parseStatements();
+        AbstractSyntaxTree.NodeStmts stmtsNode = parseStatements();
 
         matches(Scanner.TOKEN.ENDLOOP);
+
+        AbstractSyntaxTree.NodeId leftNode = ast.new NodeId(leftId);
+        AbstractSyntaxTree.NodeId rightNode = ast.new NodeId(rightId);
+        AbstractSyntaxTree.NodeLoop loopNode = ast.new NodeLoop(leftNode, rightNode, stmtsNode);
+        return loopNode;
     }
 
-    private void parseCalc() throws Exception {
+    private AbstractSyntaxTree.NodeCalc parseCalc() throws Exception {
         matches(Scanner.TOKEN.CALC);
 
         String varName = scanner.getTokenBufferString();
@@ -188,22 +222,28 @@ public class Parser {
 
         matches(Scanner.TOKEN.EQUALS);
 
-        parseExpr();
+        AbstractSyntaxTree.NodeExpr exprNode = parseExpr();
 
         System.out.println("Calc: " + varName);
+
+        AbstractSyntaxTree.NodeId idNode = ast.new NodeId(varName);
+        AbstractSyntaxTree.NodeCalc calcNode = ast.new NodeCalc(idNode, exprNode);
+        return calcNode;
     }
 
-    private void parseTerm() throws Exception {
+    private AbstractSyntaxTree.NodeExpr parseTerm() throws Exception {
         if (nextToken == Scanner.TOKEN.ID) {
             String id = scanner.getTokenBufferString();
 
             matches(Scanner.TOKEN.ID);
+            return ast.new NodeId(id);
         }
 
         else if (nextToken == Scanner.TOKEN.INTCONST) {
             String val = scanner.getTokenBufferString();
 
             matches(Scanner.TOKEN.INTCONST);
+            return ast.new NodeIntConst(Integer.parseInt(val));
         }
 
         else {
@@ -213,18 +253,20 @@ public class Parser {
     }
 
 
-    private void parseExpr() throws Exception {
-        parseTerm();
-        parseMoreExpr();
+    private AbstractSyntaxTree.NodeExpr parseExpr() throws Exception {
+        AbstractSyntaxTree.NodeExpr termNode = parseTerm();
+        AbstractSyntaxTree.NodeExpr exprNode = parseMoreExpr(termNode);
+        return exprNode;
     }
 
 
-    private void parseMoreExpr() throws Exception {
+    private AbstractSyntaxTree.NodeExpr parseMoreExpr(AbstractSyntaxTree.NodeExpr leftNode) throws Exception {
         if (nextToken == Scanner.TOKEN.PLUS) {
             matches(Scanner.TOKEN.PLUS);
-            parseExpr();
+            AbstractSyntaxTree.NodeExpr rightNode = parseExpr();
+            return ast.new NodePlus(leftNode, rightNode);
         }
-
+        return leftNode;
     }
 
 }

@@ -1,21 +1,30 @@
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PushbackReader;
-import java.io.StringReader;
 
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        String input = "loop x != 27";
+        // Hi prof. I didn't know where you wanted to test it so I just put it in main
 
-        PushbackReader pbr = new PushbackReader(new StringReader(input));
-        Scanner scannerTest = new Scanner(pbr);
+        String input = "declare a\n" +
+                "declare b\n" +
+                "initialize a = 1\n" +
+                "initialize b = 5\n" +
+                "loop a != b do\n" +
+                " calc a = a + 1\n" +
+                " print a\n" +
+                " if a=b then\n" +
+                " print a\n" +
+                " endif\n" +
+                "endloop";
 
-        Scanner.TOKEN token;
+        Parser parser = new Parser();
+        boolean success = parser.parse(input);
 
-        while((token = scannerTest.scan()) != Scanner.TOKEN.SCANEOF){
-            System.out.println(token + " -> " + scannerTest.getTokenBufferString());
+        if (success) {
+            System.out.println("\n--- Abstract Syntax Tree ---");
+            parser.getAst().show();
+        } else {
+            System.out.println("Parse failed.");
         }
-
     }
 }
