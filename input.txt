@@ -1,11 +1,11 @@
 declare a
 declare b
-initialize a = 1
+declare c
+initialize a = 0
 initialize b = 5
+initialize c = 10
 loop a != b do
 calc a = a + 1
-print a
-if a = b then
-print a
-endif
+calc c = c + 1
+print c
 endloop

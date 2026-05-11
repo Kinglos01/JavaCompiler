@@ -66,10 +66,7 @@ public class AbstractSyntaxTree {
             if (registerMap.containsKey(name)) {
                 return registerMap.get(name);
             }
-            String reg = getNextRegister();
-            code.add("loadintvar " + reg + ", " + name);
-            registerMap.put(name, reg);
-            return reg;
+            return "";
         }
     }
 
@@ -174,6 +171,11 @@ public class AbstractSyntaxTree {
         public String generateCode() {
             String exprReg = expr.generateCode();
             code.add("storeintvar " + exprReg + ", " + id.name);
+            // Reload into the existing register if one exists, so loop conditions stay current
+            if (registerMap.containsKey(id.name)) {
+                String existingReg = registerMap.get(id.name);
+                code.add("loadintvar " + existingReg + ", " + id.name);
+            }
             registerMap.put(id.name, exprReg);
             return "";
         }
