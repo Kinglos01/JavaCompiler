@@ -1,1 +1,11 @@
-declare score123
+declare a
+declare b
+initialize a = 1
+initialize b = 5
+loop a != b do
+calc a = a + 1
+print a
+if a = b then
+print a
+endif
+endloop

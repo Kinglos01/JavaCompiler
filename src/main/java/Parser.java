@@ -33,7 +33,7 @@ public class Parser {
             nextToken = scanner.scan();
 
             // Print AFTER advancing so buffer still holds current value
-            System.out.println("Matched token: " + token + " | Token buffer: " + currentBuffer);
+          //  System.out.println("Matched token: " + token + " | Token buffer: " + currentBuffer);
 
             return true;
         }
